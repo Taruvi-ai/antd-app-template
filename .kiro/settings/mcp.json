@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "taruvi": {
+      "url": "http://test-chattest2.127.0.0.1.nip.io:8000/mcp/",
+      "headers": {
+        "Authorization": "Api-Key a7808de6fef6acf63bc26d65f7a2647b8e73ac5f3514ae16349e1440783b75c9",
+        "X-App-Slug": "chattest2"
+      },
+      "autoApprove":  ["*"]
+    },
+    "context7": {
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "ctx7sk-b07da0a5-b392-4e88-8b99-095b7190feea"
+      }
+    }
+  }
+}

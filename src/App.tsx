@@ -1,6 +1,6 @@
 import {Refine} from "@refinedev/core";
 import {DevtoolsPanel, DevtoolsProvider} from "@refinedev/devtools";
-import {RefineKbar, RefineKbarProvider} from "@refinedev/kbar";
+import {RefineKbarProvider} from "@refinedev/kbar";
 
 import {
   ErrorComponent,
@@ -19,19 +19,18 @@ import Box from "@mui/material/Box";
 import {BrowserRouter, Outlet, Route, Routes} from "react-router";
 import {ColorModeContext, ColorModeContextProvider} from "./contexts/color-mode";
 import {
-  taruviAccessControlProvider,
-  taruviAppProvider, taruviAuthProvider,
+  taruviAppProvider,
+  taruviAuthProvider,
   taruviDataProvider,
   taruviStorageProvider,
-  taruviUserProvider
+  taruviUserProvider,
 } from "./providers/refineProviders.ts";
 import Navkit from "@taruvi/navkit";
 import {taruviClient} from "./taruviClient.ts";
 import {useContext} from "react";
 import {CustomSider} from "./components";
-import ExampleCreate from "./pages/examples/create.tsx";
-import ExampleList from "./pages/examples/list.tsx";
-import ExampleEdit from "./pages/examples/edit.tsx";
+import {TaskDashboard, TaskCreate, TaskEdit, AllTasksList, MyTasksList} from "./pages/tasks";
+import {DashboardOutlined, UnorderedListOutlined, UserOutlined} from "@ant-design/icons";
 
 function AppInner() {
   const {setMode} = useContext(ColorModeContext);
@@ -50,11 +49,24 @@ function AppInner() {
           notificationProvider={useNotificationProvider}
           routerProvider={routerProvider}
           authProvider={taruviAuthProvider}
-          // accessControlProvider={taruviAccessControlProvider}
           resources={[
-            {name: "list", list: "/list"},
-            {name: "create", list: "/create"},
-            {name: "edit", list: "/edit"},
+            {
+              name: "dashboard",
+              list: "/dashboard",
+              meta: { label: "Dashboard", icon: <DashboardOutlined /> },
+            },
+            {
+              name: "my-tasks",
+              list: "/my-tasks",
+              meta: { label: "My Tasks", icon: <UserOutlined /> },
+            },
+            {
+              name: "tasks",
+              list: "/tasks",
+              create: "/tasks/create",
+              edit: "/tasks/edit/:id",
+              meta: { label: "All Tasks", icon: <UnorderedListOutlined />, canDelete: true },
+            },
           ]}
           options={{
             syncWithLocation: true,
@@ -72,15 +84,15 @@ function AppInner() {
                 </ThemedLayout>
               }
             >
-              <Route index element={<NavigateToResource resource="projects"/>}/>
-              <Route path="/list" element={<ExampleList />}/>
-              <Route path="/create" element={<ExampleCreate />}/>
-              <Route path="/edit" element={<ExampleEdit />}/>
+              <Route index element={<NavigateToResource resource="dashboard"/>}/>
+              <Route path="/dashboard" element={<TaskDashboard />}/>
+              <Route path="/my-tasks" element={<MyTasksList />}/>
+              <Route path="/tasks" element={<AllTasksList />}/>
+              <Route path="/tasks/create" element={<TaskCreate />}/>
+              <Route path="/tasks/edit/:id" element={<TaskEdit />}/>
               <Route path="*" element={<ErrorComponent/>}/>
             </Route>
           </Routes>
-
-          {/*<RefineKbar/>*/}
           <UnsavedChangesNotifier/>
           <DocumentTitleHandler/>
         </Refine>
