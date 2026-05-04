@@ -25,7 +25,7 @@ export const ColorModeContextProvider: React.FC<PropsWithChildren> = ({
   ).matches;
 
   const systemPreference = isSystemPreferenceDark ? "dark" : "light";
-  const [mode, setMode] = useState(
+  const [mode, setModeState] = useState(
     colorModeFromLocalStorage || systemPreference
   );
 
@@ -35,10 +35,14 @@ export const ColorModeContextProvider: React.FC<PropsWithChildren> = ({
 
   const setColorMode = () => {
     if (mode === "light") {
-      setMode("dark");
+      setModeState("dark");
     } else {
-      setMode("light");
+      setModeState("light");
     }
+  };
+
+  const setMode = (nextMode: string) => {
+    setModeState(nextMode === "dark" ? "dark" : "light");
   };
 
   const { darkAlgorithm, defaultAlgorithm } = theme;
@@ -46,7 +50,7 @@ export const ColorModeContextProvider: React.FC<PropsWithChildren> = ({
   return (
     <ColorModeContext.Provider
       value={{
-        setMode: setColorMode,
+        setMode,
         mode,
       }}
     >
