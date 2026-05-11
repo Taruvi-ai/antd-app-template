@@ -1,0 +1,14 @@
+:root {
+  --nav-height: 0px;
+  --app-available-height: 100vh;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+/* Refine Ant Design layout defaults to min-height: 100vh — stacks under Navkit. */
+.ant-layout.ant-layout-has-sider {
+  min-height: var(--app-available-height) !important;
+}

@@ -1,1 +1,1 @@
-export { MuiSidenav as CustomSider } from "./MuiSidenav";
+export { SideNav as CustomSider } from "./SideNav.tsx";

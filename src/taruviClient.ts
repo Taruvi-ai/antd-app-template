@@ -9,11 +9,6 @@ import { Client } from "@taruvi/sdk";
  * // Use with Refine providers (recommended)
  * import { taruviDataProvider, taruviAuthProvider } from "./providers/refineProviders";
  *
- * @example
- * // Direct SDK usage (advanced)
- * import { taruviClient } from "./taruviClient";
- * const response = await taruviClient.httpClient.get("api/...");
- *
  * @see {@link https://docs.taruvi.com|Taruvi Documentation}
  */
 export const taruviClient = (() => {

@@ -18,6 +18,8 @@ import {App as AntdApp} from "antd";
 import Box from "@mui/material/Box";
 import {BrowserRouter, Outlet, Route, Routes} from "react-router";
 import {ColorModeContext, ColorModeContextProvider} from "./contexts/color-mode";
+import {useContext, useEffect, useRef} from "react";
+
 import {
   taruviAppProvider,
   taruviAuthProvider,
@@ -27,18 +29,29 @@ import {
 } from "./providers/refineProviders.ts";
 import Navkit from "@taruvi/navkit";
 import {taruviClient} from "./taruviClient.ts";
-import {useContext} from "react";
 import {CustomSider} from "./components";
 import {TaskDashboard, TaskCreate, TaskEdit, AllTasksList, MyTasksList} from "./pages/tasks";
 import {DashboardOutlined, UnorderedListOutlined, UserOutlined} from "@ant-design/icons";
 
 function AppInner() {
   const {setMode} = useContext(ColorModeContext);
+  const navRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (navRef.current) {
+      document.documentElement.style.setProperty('--nav-height', `${navRef.current.offsetHeight}px`);
+    }
+  }, []);
 
   return (
     <AntdApp>
       <DevtoolsProvider>
-        <Navkit client={taruviClient} getTheme={(theme) => setMode(theme)}/>
+        <div
+          ref={navRef}
+          style={{ position: 'sticky', top: 0, zIndex: 1300, width: '100%' }}
+        >
+          <Navkit client={taruviClient} getTheme={(theme) => setMode(theme)} />
+        </div>
         <Refine
           dataProvider={{
             default: taruviDataProvider,
@@ -78,7 +91,12 @@ function AppInner() {
             <Route
               element={
                 <ThemedLayout Sider={(props) => <CustomSider {...props} />}>
-                  <Box sx={{ ml: { xs: 0, md: "72px" }, transition: "margin-left 0.2s ease-in-out" }}>
+                  <Box
+                    sx={{
+                      ml: { xs: 0, md: "var(--app-sider-width, 56px)" },
+                      transition: "margin-left 0.2s ease-in-out",
+                    }}
+                  >
                     <Outlet/>
                   </Box>
                 </ThemedLayout>

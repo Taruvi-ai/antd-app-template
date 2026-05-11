@@ -1,7 +1,7 @@
-import { useList } from "@refinedev/core";
-import { List } from "@refinedev/antd";
-import { Input, Select, Space, Table, Tag, Typography } from "antd";
-import { useEffect, useMemo, useState } from "react";
+import type { CrudFilters } from "@refinedev/core";
+import { HttpError } from "@refinedev/core";
+import { List, useTable } from "@refinedev/antd";
+import { Button, Form, Input, Select, Space, Table, Tag, Typography } from "antd";
 import { EXAMPLE_STATUS_VALUES } from "./formSchema";
 
 type ExampleItem = {
@@ -11,91 +11,81 @@ type ExampleItem = {
   created_at?: string;
 };
 
-const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
+type ExampleSearch = {
+  name?: string;
+  status?: string;
+};
+
+const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
 
 export default function ExampleList() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [searchInput, setSearchInput] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string | undefined>();
-
-  useEffect(() => {
-    const timer = setTimeout(() => setSearchTerm(searchInput.trim()), 400);
-    return () => clearTimeout(timer);
-  }, [searchInput]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, statusFilter]);
-
-  const filters = useMemo(() => {
-    const nextFilters: Array<{ field: string; operator: "containss" | "eq"; value: string }> = [];
-
-    if (searchTerm) {
-      nextFilters.push({ field: "name", operator: "containss", value: searchTerm });
-    }
-
-    if (statusFilter) {
-      nextFilters.push({ field: "status", operator: "eq", value: statusFilter });
-    }
-
-    return nextFilters;
-  }, [searchTerm, statusFilter]);
-
-  const { result, query } = useList<ExampleItem>({
+  const { tableProps, searchFormProps } = useTable<ExampleItem, HttpError, ExampleSearch>({
     resource: "example_items",
-    filters,
-    sorters: [{ field: "id", order: "desc" }],
     pagination: {
-      currentPage,
-      pageSize,
+      mode: "server",
+      pageSize: 10,
+    },
+    sorters: {
+      initial: [{ field: "id", order: "desc" }],
+    },
+    onSearch: (values): CrudFilters => {
+      const next: CrudFilters = [];
+      const name = values.name?.trim();
+      if (name) {
+        next.push({ field: "name", operator: "containss", value: name });
+      }
+      if (values.status) {
+        next.push({ field: "status", operator: "eq", value: values.status });
+      }
+      return next;
     },
   });
 
-  const rows = result?.data ?? [];
-  const total = result?.total ?? 0;
-
   return (
-    <List title="Example List (Backend Driven)">
+    <List title="Example List (useTable + server pagination)">
       <Space direction="vertical" size={16} style={{ width: "100%" }}>
-        <Space wrap>
-          <Input.Search
-            value={searchInput}
-            onChange={(event) => setSearchInput(event.target.value)}
-            placeholder="Search by name"
-            allowClear
-            style={{ width: 280 }}
-          />
+        <Form {...searchFormProps} layout="inline">
+          <Form.Item name="name">
+            <Input.Search
+              placeholder="Search by name"
+              allowClear
+              style={{ width: 280 }}
+              onSearch={() => searchFormProps.form?.submit?.()}
+            />
+          </Form.Item>
 
-          <Select
-            placeholder="Filter by status"
-            value={statusFilter}
-            allowClear
-            onChange={(value) => setStatusFilter(value)}
-            style={{ width: 180 }}
-            options={EXAMPLE_STATUS_VALUES.map((value) => ({
-              label: value[0].toUpperCase() + value.slice(1),
-              value,
-            }))}
-          />
-        </Space>
+          <Form.Item name="status">
+            <Select
+              placeholder="Filter by status"
+              allowClear
+              style={{ width: 180 }}
+              options={EXAMPLE_STATUS_VALUES.map((value) => ({
+                label: value[0].toUpperCase() + value.slice(1),
+                value,
+              }))}
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Apply filters
+            </Button>
+          </Form.Item>
+        </Form>
 
         <Table<ExampleItem>
+          {...tableProps}
           rowKey="id"
-          loading={query.isLoading}
-          dataSource={rows}
-          pagination={{
-            current: currentPage,
-            pageSize,
-            total,
-            showSizeChanger: true,
-            pageSizeOptions: PAGE_SIZE_OPTIONS.map(String),
-            onChange: (page, nextPageSize) => {
-              setCurrentPage(page);
-              setPageSize(nextPageSize ?? 10);
-            },
-          }}
+          pagination={
+            tableProps.pagination === false
+              ? false
+              : {
+                  ...tableProps.pagination,
+                  showSizeChanger: true,
+                  pageSizeOptions: [...PAGE_SIZE_OPTIONS].map(String),
+                  showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                }
+          }
         >
           <Table.Column dataIndex="id" title="ID" width={90} />
           <Table.Column dataIndex="name" title="Name" />
