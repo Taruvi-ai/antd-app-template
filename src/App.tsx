@@ -1,9 +1,9 @@
 import {Refine} from "@refinedev/core";
+import {Authenticated} from "@refinedev/core";
 import {DevtoolsPanel, DevtoolsProvider} from "@refinedev/devtools";
 import {RefineKbarProvider} from "@refinedev/kbar";
 
 import {
-  ErrorComponent,
   ThemedLayout,
   useNotificationProvider,
 } from "@refinedev/antd";
@@ -11,7 +11,6 @@ import "@refinedev/antd/dist/reset.css";
 
 import routerProvider, {
   DocumentTitleHandler,
-  NavigateToResource,
   UnsavedChangesNotifier,
 } from "@refinedev/react-router";
 import {App as AntdApp} from "antd";
@@ -26,12 +25,14 @@ import {
   taruviDataProvider,
   taruviStorageProvider,
   taruviUserProvider,
+  taruviAccessControlProvider,
 } from "./providers/refineProviders.ts";
 import Navkit from "@taruvi/navkit";
 import {taruviClient} from "./taruviClient.ts";
 import {CustomSider} from "./components";
-import {TaskDashboard, TaskCreate, TaskEdit, AllTasksList, MyTasksList} from "./pages/tasks";
-import {DashboardOutlined, UnorderedListOutlined, UserOutlined} from "@ant-design/icons";
+import {DashboardOutlined} from "@ant-design/icons";
+import {Login} from "./utils/Login";
+import {Home} from "./pages/home";
 
 function AppInner() {
   const {setMode} = useContext(ColorModeContext);
@@ -46,12 +47,6 @@ function AppInner() {
   return (
     <AntdApp>
       <DevtoolsProvider>
-        <div
-          ref={navRef}
-          style={{ position: 'sticky', top: 0, zIndex: 1300, width: '100%' }}
-        >
-          <Navkit client={taruviClient} getTheme={(theme) => setMode(theme)} />
-        </div>
         <Refine
           dataProvider={{
             default: taruviDataProvider,
@@ -62,23 +57,12 @@ function AppInner() {
           notificationProvider={useNotificationProvider}
           routerProvider={routerProvider}
           authProvider={taruviAuthProvider}
+          accessControlProvider={taruviAccessControlProvider}
           resources={[
             {
               name: "dashboard",
               list: "/dashboard",
               meta: { label: "Dashboard", icon: <DashboardOutlined /> },
-            },
-            {
-              name: "my-tasks",
-              list: "/my-tasks",
-              meta: { label: "My Tasks", icon: <UserOutlined /> },
-            },
-            {
-              name: "tasks",
-              list: "/tasks",
-              create: "/tasks/create",
-              edit: "/tasks/edit/:id",
-              meta: { label: "All Tasks", icon: <UnorderedListOutlined />, canDelete: true },
             },
           ]}
           options={{
@@ -88,27 +72,37 @@ function AppInner() {
           }}
         >
           <Routes>
+            {/* ── Public — no auth required ── */}
+
+            {/*<Route path="/welcome" element={<div>Welcome public page</div>} />*/}
+
+            {/* ── Protected — requires a valid session ── */}
             <Route
+              path="/*"
               element={
-                <ThemedLayout Sider={(props) => <CustomSider {...props} />}>
-                  <Box
-                    sx={{
-                      ml: { xs: 0, md: "var(--app-sider-width, 56px)" },
-                      transition: "margin-left 0.2s ease-in-out",
-                    }}
-                  >
-                    <Outlet/>
-                  </Box>
-                </ThemedLayout>
+                <Authenticated key="protected" fallback={<Login />}>
+                  <>
+                    <div
+                      ref={navRef}
+                      style={{ position: 'sticky', top: 0, zIndex: 1300, width: '100%' }}
+                    >
+                      <Navkit client={taruviClient} getTheme={(theme) => setMode(theme)} />
+                    </div>
+                    <ThemedLayout Sider={(props) => <CustomSider {...props} />}>
+                      <Box
+                        sx={{
+                          ml: { xs: 0, md: "var(--app-sider-width, 56px)" },
+                          transition: "margin-left 0.2s ease-in-out",
+                        }}
+                      >
+                        <Outlet />
+                      </Box>
+                    </ThemedLayout>
+                  </>
+                </Authenticated>
               }
             >
-              <Route index element={<NavigateToResource resource="dashboard"/>}/>
-              <Route path="/dashboard" element={<TaskDashboard />}/>
-              <Route path="/my-tasks" element={<MyTasksList />}/>
-              <Route path="/tasks" element={<AllTasksList />}/>
-              <Route path="/tasks/create" element={<TaskCreate />}/>
-              <Route path="/tasks/edit/:id" element={<TaskEdit />}/>
-              <Route path="*" element={<ErrorComponent/>}/>
+              <Route path="dashboard" element={<Home />}/>
             </Route>
           </Routes>
           <UnsavedChangesNotifier/>
