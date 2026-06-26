@@ -1,47 +1,86 @@
-# refine-template-new
+# Taruvi Ant Design Template (Refine v5)
 
-<div align="center" style="margin: 30px;">
-    <a href="https://refine.dev">
-    <img alt="refine logo" src="https://refine.ams3.cdn.digitaloceanspaces.com/readme/refine-readme-banner.png">
-    </a>
-</div>
-<br/>
+This repository is the **Ant Design** starter template for Taruvi apps and hackathons.
 
-This [Refine](https://github.com/refinedev/refine) project was generated with [create refine-app](https://github.com/refinedev/refine/tree/master/packages/create-refine-app).
+It includes:
+- A Refine v5 + React + **Ant Design** app scaffold
+- Example CRUD pages under `src/pages/examples/` (Zod + antd forms)
+- Navkit top navigation with a customizable profile menu hook (`src/navkit/useNavkitProfileMenuItems.tsx`)
+- GitHub Codespaces-ready devcontainer setup
+- Guided Codex startup flow for required Taruvi environment variables
+- MCP configuration for Taruvi + helpful developer tools
 
-## Getting Started
+For the **MUI** variant, see `taruvi-hacks-template`.
 
-A React Framework for building internal tools, admin panels, dashboards & B2B apps with unmatched flexibility ✨
+## Who This Is For
 
-Refine's hooks and components simplifies the development process and eliminates the repetitive tasks by providing industry-standard solutions for crucial aspects of a project, including authentication, access control, routing, networking, state management, and i18n.
+- **Participants**: use this template to start building quickly in Codespaces.
+- **Organizers/Mentors**: use this for standardized onboarding across teams.
 
-## Available Scripts
+## Hackathon Flow
 
-### Running the development server.
+### Organizer-side (Advanced setup)
+1. Sign up for GitHub Codespaces in Advanced.
+2. Create sites for each group based on color coding in Advanced.
+3. Ensure participants accept their Taruvi Console invite.
+
+### Participant-side setup
+0. In Taruvi Console, create your app and collect:
+   - `TARUVI_SITE_URL` (site URL)
+   - `TARUVI_API_KEY`
+   - `TARUVI_APP_SLUG`
+1. Open this repo when the hackathon starts:
+   - https://github.com/Taruvi-ai/taruvi-antd-template
+2. Create a GitHub Codespace (first load is usually ~2.5 minutes).
+3. Open `.env`, paste your `TARUVI_SITE_URL`, `TARUVI_APP_SLUG`, and `TARUVI_API_KEY`, then save.
+
+## Codespaces Behavior (Important)
+
+When Codex starts in the devcontainer:
+- It verifies required Taruvi env vars are present.
+- If missing, it asks you to update `.env` with `TARUVI_SITE_URL`, `TARUVI_APP_SLUG`, and `TARUVI_API_KEY`.
+- It writes `.codex/config.toml` with resolved Taruvi values.
+- It attempts to install the Codex VS Code extension.
+- It launches Codex after setup is complete.
+
+## Updating Config Later
+
+If you change your Taruvi site, app slug, or API key later:
+1. Edit `.env`
+2. Update `TARUVI_SITE_URL`, `TARUVI_APP_SLUG`, or `TARUVI_API_KEY`
+3. Run `npm run codex:refresh`
+4. Restart Codex if needed
+
+## Security Notes
+
+- `OPENAI_API_KEY` is injected via GitHub Codespaces secrets and must **never be committed** to the repository.
+- If a key was ever committed accidentally, rotate/revoke it immediately in the OpenAI dashboard.
+
+## Local Commands
 
 ```bash
-    npm run dev
+npm run dev
+npm run build
+npm run start
 ```
 
-### Building for production.
+## Tech Stack
 
-```bash
-    npm run build
-```
+- [Refine](https://refine.dev)
+- React + TypeScript
+- **Ant Design** (`@refinedev/antd`)
+- Zod form validation
+- Taruvi Providers + Taruvi MCP integration
 
-### Running the production server.
+## Customizing Navkit
 
-```bash
-    npm run start
-```
+Add items to the profile avatar dropdown (e.g. "Report an issue", help links) by editing `src/navkit/useNavkitProfileMenuItems.tsx`. Full instructions: [docs/GETTING_STARTED.md — Custom profile menu items](docs/GETTING_STARTED.md#custom-profile-menu-items).
 
 ## Learn More
 
-To learn more about **Refine**, please check out the [Documentation](https://refine.dev/docs)
-
-- **REST Data Provider** [Docs](https://refine.dev/docs/core/providers/data-provider/#overview)
-- **Ant Design** [Docs](https://refine.dev/docs/ui-frameworks/antd/tutorial/)
-- **React Router** [Docs](https://refine.dev/docs/core/providers/router-provider/)
+- [Refine Docs](https://refine.dev/docs)
+- [Refine Data Provider Docs](https://refine.dev/docs/core/providers/data-provider/#overview)
+- [Refine MUI Docs](https://refine.dev/docs/ui-frameworks/mui/tutorial/)
 
 ## License
 
