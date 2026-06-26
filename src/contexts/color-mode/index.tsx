@@ -9,11 +9,11 @@ import {
 
 type ColorModeContextType = {
   mode: string;
-  setMode: (mode: string) => void;
+  setMode: (mode?: "light" | "dark") => void;
 };
 
 export const ColorModeContext = createContext<ColorModeContextType>(
-  {} as ColorModeContextType
+  {} as ColorModeContextType,
 );
 
 export const ColorModeContextProvider: React.FC<PropsWithChildren> = ({
@@ -21,28 +21,25 @@ export const ColorModeContextProvider: React.FC<PropsWithChildren> = ({
 }) => {
   const colorModeFromLocalStorage = localStorage.getItem("colorMode");
   const isSystemPreferenceDark = window?.matchMedia(
-    "(prefers-color-scheme: dark)"
+    "(prefers-color-scheme: dark)",
   ).matches;
 
   const systemPreference = isSystemPreferenceDark ? "dark" : "light";
   const [mode, setModeState] = useState(
-    colorModeFromLocalStorage || systemPreference
+    colorModeFromLocalStorage || systemPreference,
   );
 
   useEffect(() => {
     window.localStorage.setItem("colorMode", mode);
+    document.documentElement.setAttribute("data-theme", mode);
   }, [mode]);
 
-  const setColorMode = () => {
-    if (mode === "light") {
-      setModeState("dark");
+  const setMode = (newMode?: "light" | "dark") => {
+    if (newMode) {
+      setModeState(newMode);
     } else {
-      setModeState("light");
+      setModeState((prevMode) => (prevMode === "light" ? "dark" : "light"));
     }
-  };
-
-  const setMode = (nextMode: string) => {
-    setModeState(nextMode === "dark" ? "dark" : "light");
   };
 
   const { darkAlgorithm, defaultAlgorithm } = theme;
@@ -55,7 +52,6 @@ export const ColorModeContextProvider: React.FC<PropsWithChildren> = ({
       }}
     >
       <ConfigProvider
-        // you can change the theme colors here. example: ...RefineThemes.Magenta,
         theme={{
           ...RefineThemes.Blue,
           algorithm: mode === "light" ? defaultAlgorithm : darkAlgorithm,

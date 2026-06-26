@@ -1,103 +1,82 @@
-import { Box, Typography, Container, useTheme } from "@mui/material";
-import { keyframes } from "@mui/system";
-
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
-
-const gradientShift = keyframes`
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-`;
+import { Flex, Typography } from "antd";
+import { useContext } from "react";
+import { ColorModeContext } from "../../contexts/color-mode";
 
 export const Home = () => {
-  const theme = useTheme();
-  const isDark = theme.palette.mode === "dark";
+  const { mode } = useContext(ColorModeContext);
+  const isDark = mode === "dark";
+
+  const coverBackground = isDark
+    ? "linear-gradient(135deg, #002A3C 0%, #004369 55%, #056A8F 100%)"
+    : "linear-gradient(135deg, #dce9f5 0%, #5ab4f0 60%, #2b97ff 100%)";
 
   return (
-    <Container maxWidth={false} disableGutters>
-      <Box
-        sx={{
-          minHeight: "calc(100vh - var(--nav-height, 60px))",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: isDark
-            ? "linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #1a1a2e)"
-            : "linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #667eea)",
-          backgroundSize: "400% 400%",
-          animation: `${gradientShift} 15s ease infinite`,
-          position: "relative",
-          overflow: "hidden",
-          "&::before": {
-            content: '""',
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: isDark
-              ? "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 50%)"
-              : "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.2) 0%, transparent 50%)",
-            pointerEvents: "none",
-          },
-        }}
+    <div
+      style={{
+        minHeight: "calc(100vh - var(--nav-height, 60px))",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: coverBackground,
+        position: "relative",
+        overflow: "hidden",
+        padding: "48px 32px",
+      }}
+    >
+      <Flex
+        align="center"
+        justify="space-between"
+        gap={48}
+        style={{ width: "100%", maxWidth: 1200, zIndex: 1 }}
+        wrap="wrap"
       >
-        <Box
-          sx={{
-            textAlign: "center",
-            zIndex: 1,
-            animation: `${fadeIn} 1s ease-out`,
-          }}
-        >
-          <Typography
-            variant="h1"
-            sx={{
-              fontSize: { xs: "3rem", sm: "4rem", md: "6rem" },
-              fontWeight: 700,
-              background: isDark
-                ? "linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%)"
-                : "linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              textShadow: isDark
-                ? "0 4px 20px rgba(255,255,255,0.1)"
-                : "0 4px 20px rgba(0,0,0,0.1)",
-              mb: 2,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            Hello
-          </Typography>
-          <Typography
-            variant="h5"
-            sx={{
-              color: isDark ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.95)",
+        <div>
+          <Typography.Title
+            level={1}
+            style={{
+              fontFamily: "'Quicksand', sans-serif",
               fontWeight: 300,
-              fontSize: { xs: "1rem", sm: "1.25rem", md: "1.5rem" },
-              letterSpacing: "0.05em",
-              animation: `${fadeIn} 1s ease-out 0.3s backwards`,
+              color: "#fff",
+              fontSize: "clamp(2.5rem, 5vw, 3.625rem)",
+              lineHeight: 1.1,
+              marginBottom: 16,
             }}
           >
-            Welcome to your Taruvi template
-          </Typography>
-        </Box>
-      </Box>
-    </Container>
+            Taruvi
+            <br />
+            Design
+            <br />
+            System
+          </Typography.Title>
+          <Typography.Paragraph
+            style={{
+              color: "rgba(255,255,255,0.85)",
+              fontFamily: "'Open Sans', sans-serif",
+              fontSize: "1.0625rem",
+              maxWidth: 420,
+              marginBottom: 0,
+            }}
+          >
+            Welcome to your Taruvi template — branded with the Taruvi design system.
+          </Typography.Paragraph>
+        </div>
+
+        <Flex
+          align="flex-end"
+          gap={12}
+          style={{
+            display: "none",
+            opacity: 0.85,
+            fontFamily: "'Quicksand', sans-serif",
+          }}
+          className="home-type-demo"
+        />
+      </Flex>
+      <style>{`
+        @media (min-width: 768px) {
+          .home-type-demo { display: flex !important; }
+        }
+      `}</style>
+    </div>
   );
 };

@@ -12,3 +12,9 @@ body {
 .ant-layout.ant-layout-has-sider {
   min-height: var(--app-available-height) !important;
 }
+
+@media (max-width: 767px) {
+  .app-main-content {
+    margin-left: 0 !important;
+  }
+}
