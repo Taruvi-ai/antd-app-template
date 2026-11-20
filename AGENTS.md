@@ -50,13 +50,6 @@ An unrequested policy or function isn't neutral — it's dead weight every futur
 change has to route around. When genuinely unsure whether something's needed,
 ask — don't default to yes.
 
-**This repo has an automated PR review.**
-[`.github/workflows/ui-ux-review.yml`](.github/workflows/ui-ux-review.yml) runs
-a UI/UX + accessibility check on every PR touching `src/pages/**` or
-`src/components/**`, posting findings as a PR comment — informational only,
-never blocks merge. You don't need to self-review before pushing; it runs
-automatically regardless of which tool wrote the code.
-
 ## Mandatory Taruvi preflight
 
 For anything touching Taruvi, `@taruvi/sdk`, or `@taruvi/refine-providers`, **read

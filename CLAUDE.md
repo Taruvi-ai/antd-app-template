@@ -22,7 +22,7 @@ decisions as it moves resource to resource.
 |---|---|---|
 | **`taruvi-backend`** | schema, policies, roles, Python functions, SQL | `taruvi-app-developer` skill |
 | **`taruvi-frontend`** | Refine/antd pages, providers, hooks, dashboards, forms | `taruvi-refine-providers` skill + UI guidelines (fetched, see `AGENTS.md`) |
-| **`ui-ux-reviewer`** | audit built UI vs. design system + WCAG — runs via CI, not the coordinator (see step 4) | UI guidelines (fetched) + theme |
+| **`ui-ux-reviewer`** | audit built UI vs. design system + WCAG — on request only (see step 4) | UI guidelines (fetched) + theme |
 
 ## The flow
 
@@ -46,16 +46,10 @@ in a single continuous session, reading `docs/spec.md` + the real names from
 step 2. It registers resources in `src/App.tsx` directly as it goes; there's no
 parallel-builder collision to avoid, so no separate batching-at-the-end step.
 
-**4. Don't run review yourself — it happens in CI.**
-Review is **not** a coordinator step anymore. `.github/workflows/ui-ux-review.yml`
-runs `ui-ux-reviewer`'s checklist automatically on every PR that touches
-`src/pages/**` or `src/components/**`, and posts findings as a PR comment —
-informational only, it never blocks merge. So: don't dispatch `ui-ux-reviewer`
-as part of a build, and don't ask the user if they want one. If a PR isn't open
-yet, there's nothing to review; the check runs once they push and open the PR.
-(`ui-ux-reviewer.md` still exists as the criteria source the workflow reads —
-you can also dispatch it manually if a user explicitly asks for an ad hoc local
-review before pushing.)
+**4. Review is on request.**
+There is no automated review. Don't dispatch `ui-ux-reviewer` as part of a build
+unless the user explicitly asks for a UI/UX + accessibility review; then dispatch
+it on the pages/components that changed.
 
 **5. Relay** a concise summary to the user — subagent reports aren't shown to them.
 

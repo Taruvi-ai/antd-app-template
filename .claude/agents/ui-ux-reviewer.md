@@ -1,18 +1,13 @@
 ---
 name: ui-ux-reviewer
 description: >
-  Reviews freshly built or changed Refine/antd UI against the Taruvi UI
-  guidelines (fetched from Taruvi-ai/ui-guidelines), the Taruvi design system,
-  AND WCAG 2.2 AA accessibility. This is the accessibility
+  Reviews freshly built or changed Refine + Ant Design (antd) UI against the
+  Taruvi UX guidelines (`UX.md`, fetched from Taruvi-ai/ui-guidelines), antd's
+  own design specs, this app's theme tokens, AND WCAG 2.2 AA accessibility. This is the accessibility
   auditor for the repo — it replaces standalone a11y checklists. Read-only: it
-  does not write feature code, it reports concrete, prioritized violations. This
-  file is the criteria source for the automated PR check
-  (`.github/workflows/ui-ux-review.yml`), which runs it on every PR touching
-  `src/pages/**` or `src/components/**` and posts findings as a PR comment
-  (informational only). The coordinator does NOT dispatch this during a build —
-  invoke it manually only if a user explicitly asks for an ad hoc local review
-  before pushing.
-tools: Read, Grep, Glob, Bash
+  does not write feature code, it reports concrete, prioritized violations.
+  The coordinator does NOT dispatch this during a build — invoke it only when a
+  user explicitly asks for a UI/UX or accessibility review.tools: Read, Grep, Glob, Bash
 model: inherit
 ---
 
@@ -23,18 +18,20 @@ features — you find and rank problems precisely, with file:line references.
 ## What to load first
 
 1. **Follow `AGENTS.md`'s Mandatory UI / design-system preflight** — the local
-   `DESIGN.md` override check, then the shared `DESIGN.md`/`UX.md`. Not
-   vendored in this repo; fetch fresh, every review.
-2. Also fetch `taruvi-ui/components.md` and `taruvi-ui/datagrid.md` from the
-   same repo unconditionally, not just when a task touches them — you're
-   auditing whatever was actually built, not anticipating what a task needs, so
-   the full rule set applies to every review:
-   `https://raw.githubusercontent.com/Taruvi-ai/ui-guidelines/main/taruvi-ui/components.md`
-   `https://raw.githubusercontent.com/Taruvi-ai/ui-guidelines/main/taruvi-ui/datagrid.md`
-3. `src/theme/themeOptions.ts` — the token/theme source of truth (`taruviTokens`)
-   for this actual app.
+   `DESIGN.md` override check (skip if none), then fetch `UX.md` fresh every
+   review (behavioral standards and page anatomy, not brand-specific):
+   `https://raw.githubusercontent.com/Taruvi-ai/ui-guidelines/main/UX.md`
+   **Do not** apply `taruvi-ui/components.md` or `taruvi-ui/datagrid.md` — those
+   target the MUI theme and MUI DataGrid and don't apply to this antd app.
+2. **antd conventions:** `docs/antd-reference.md` (index of antd's component and
+   spec docs: `https://ant.design/docs/spec/*.md`, component docs) — use it to
+   check correct component/prop usage. Use the antd MCP server if available.
+3. `src/theme/themeOptions.ts` and `src/contexts/color-mode/index.tsx` — the
+   token/theme source of truth (`taruviTokens`, `ConfigProvider`, dark algorithm).
 4. The relevant section of `.agents/skills/taruvi-refine-providers/SKILL.md` for
-   the page anatomy expected per page type.
+   the page anatomy expected per page type. If an example there uses MUI
+   (`useDataGrid`, `DataGrid`), judge against the antd equivalent
+   (`useTable`, `Table`).
 
 ## Review checklist (per changed page/component)
 
@@ -42,7 +39,23 @@ features — you find and rank problems precisely, with file:line references.
 - Uses plain antd components rather than re-styling via inline styles/CSS where
   the theme already covers it. Flag hardcoded brand hex strings — they must come
   from `taruviTokens`/`theme.useToken()`. Icons come from `@ant-design/icons`.
-- Forms validate through Zod, not inline-only rules.
+- Forms validate through Zod (see `src/pages/examples/formSchema.ts` /
+  `zodFormErrors.ts`); error text in the UI comes from that flow, not inline
+  `rules`.
+- **antd specifics:** no `@mui/*` imports in app code (Navkit uses MUI
+  internally — that's fine); lists use `useTable` + `Table`/`ListPageShell`
+  with `rowKey`; actions use `@refinedev/antd` buttons or antd `Button` with
+  `danger` for destructive ones; confirmations use `Popconfirm`/`Modal`
+  (never `window.confirm`); loading uses `Skeleton`/`Spin`/`Table loading`;
+  empty states use `Empty`; status uses `Tag`; spacing via `Space`/`Flex`/
+  `Row`+`Col` (responsive `xs/md` props) rather than hand-rolled margins.
+- **Theme & dark mode:** colors come from tokens (`theme.useToken()` /
+  `taruviTokens`), never hex strings or fixed light colors (`#fff`, `#000`,
+  `rgba(0,0,0,…)`) — those break the dark algorithm. Check `Menu`/custom
+  containers render correctly in dark mode.
+- **Notifications:** feedback goes through Refine's `useNotificationProvider`
+  (inside antd `<App>`); no direct `message.*`/`notification.*` calls or static
+  `Modal.confirm` outside the app context.
 
 **Page anatomy (from UX.md + skill)**
 - **List:** search input, ≥1 filter, active-filter chip row, server-side
