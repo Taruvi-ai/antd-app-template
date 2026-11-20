@@ -8,7 +8,10 @@ export const applyZodErrorsToAntdForm = (
   const grouped = new Map<string, { name: (string | number)[]; errors: string[] }>();
 
   for (const issue of error.issues) {
-    const name = issue.path.length > 0 ? issue.path : ["_form"];
+    const name: (string | number)[] =
+      issue.path.length > 0
+        ? issue.path.map((segment) => (typeof segment === "symbol" ? String(segment) : segment))
+        : ["_form"];
     const key = name.join(".");
     const entry = grouped.get(key);
 

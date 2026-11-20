@@ -1,8 +1,8 @@
 import type { MenuProps } from "antd";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Menu } from "antd";
 import { type TreeMenuItem, useLink, useMenu } from "@refinedev/core";
-import {MenuFoldOutlined, MenuOutlined, MenuUnfoldOutlined} from "@ant-design/icons";
+import {MenuFoldOutlined, MenuUnfoldOutlined} from "@ant-design/icons";
 
 /** Compact column; main content offset uses --app-sider-width in App.tsx */
 const WIDTH_EXPANDED = 152;

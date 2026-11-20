@@ -1,20 +1,19 @@
 {
-  "name": "refine-template-new",
+  "name": "taruvi-antd-template",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "dependencies": {
     "@ant-design/cli": "^6.3.7",
     "@ant-design/icons": "^5.5.1",
-    "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.6",
-    "@mui/icons-material": "^7.3.7",
-    "@mui/material": "^7.3.7",
+    "@mui/icons-material": "^7.3.11",
+    "@mui/material": "^7.3.11",
     "@refinedev/antd": "^6.0.1",
     "@refinedev/cli": "^2.16.48",
     "@refinedev/core": "^5.0.8",
@@ -22,12 +21,12 @@
     "@refinedev/kbar": "^2.0.0",
     "@refinedev/react-router": "^2.0.0",
     "@refinedev/rest": "^2.1.0",
-    "@taruvi/navkit": "^0.0.47",
-    "@taruvi/refine-providers": "^1.3.2",
-    "@taruvi/sdk": "^1.5.0",
+    "@taruvi/navkit": "^0.0.51",
+    "@taruvi/refine-providers": "^1.3.0",
+    "@taruvi/sdk": "^1.5.4",
     "@uiw/react-md-editor": "^4.0.8",
     "antd": "^5.23.0",
-    "axios": "^1.16.0",
+    "axios": "^1.21.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router": "^7.0.2",
@@ -38,9 +37,10 @@
     "@types/node": "^20",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
-    "@typescript-eslint/eslint-plugin": "^5.57.1",
-    "@typescript-eslint/parser": "^5.57.1",
+    "@typescript-eslint/eslint-plugin": "^8.57.2",
+    "@typescript-eslint/parser": "^8.57.2",
     "@vitejs/plugin-react": "^4.4.1",
+    "archiver": "^7.0.1",
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
@@ -51,9 +51,12 @@
   },
   "scripts": {
     "dev": "refine dev",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build --configLoader runner",
     "start": "refine start",
-    "refine": "refine"
+    "refine": "refine",
+    "setup": "node setup-env.js",
+    "deploy": "node scripts/deploy.mjs",
+    "postinstall": "node scripts/generate-codex-agents.mjs; (npx -y skills add Taruvi-ai/taruvi-skills --skill '*' --agent claude-code codex kiro-cli -y 2>/dev/null) || echo \"[skills] fetch skipped (offline or CLI unavailable) — run 'npx skills add Taruvi-ai/taruvi-skills' manually\""
   },
   "browserslist": {
     "production": [
@@ -68,6 +71,6 @@
     ]
   },
   "refine": {
-    "projectId": "OeEx5p-f4v2mf-61ddWh"
+    "projectId": "obEpHJ-M7JimA-31GF1J"
   }
 }

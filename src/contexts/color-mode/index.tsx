@@ -1,5 +1,5 @@
-import { RefineThemes } from "@refinedev/antd";
 import { ConfigProvider, theme } from "antd";
+import { baseThemeConfig } from "../../theme/themeOptions";
 import {
   type PropsWithChildren,
   createContext,
@@ -19,7 +19,13 @@ export const ColorModeContext = createContext<ColorModeContextType>(
 export const ColorModeContextProvider: React.FC<PropsWithChildren> = ({
   children,
 }) => {
-  const colorModeFromLocalStorage = localStorage.getItem("colorMode");
+  const colorModeFromLocalStorage = (() => {
+    try {
+      return localStorage.getItem("colorMode");
+    } catch {
+      return null;
+    }
+  })();
   const isSystemPreferenceDark = window?.matchMedia(
     "(prefers-color-scheme: dark)"
   ).matches;
@@ -30,16 +36,13 @@ export const ColorModeContextProvider: React.FC<PropsWithChildren> = ({
   );
 
   useEffect(() => {
-    window.localStorage.setItem("colorMode", mode);
-  }, [mode]);
-
-  const setColorMode = () => {
-    if (mode === "light") {
-      setModeState("dark");
-    } else {
-      setModeState("light");
+    try {
+      window.localStorage.setItem("colorMode", mode);
+    } catch {
+      /* storage unavailable — ignore */
     }
-  };
+    document.documentElement.setAttribute("data-theme", mode);
+  }, [mode]);
 
   const setMode = (nextMode: string) => {
     setModeState(nextMode === "dark" ? "dark" : "light");
@@ -55,9 +58,9 @@ export const ColorModeContextProvider: React.FC<PropsWithChildren> = ({
       }}
     >
       <ConfigProvider
-        // you can change the theme colors here. example: ...RefineThemes.Magenta,
+        // Change brand colors in src/theme/themeOptions.ts
         theme={{
-          ...RefineThemes.Blue,
+          ...baseThemeConfig,
           algorithm: mode === "light" ? defaultAlgorithm : darkAlgorithm,
         }}
       >
