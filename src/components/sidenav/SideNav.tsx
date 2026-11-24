@@ -1,8 +1,8 @@
 import type { MenuProps } from "antd";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Menu } from "antd";
 import { type TreeMenuItem, useLink, useMenu } from "@refinedev/core";
-import {MenuFoldOutlined, MenuOutlined, MenuUnfoldOutlined} from "@ant-design/icons";
+import {MenuFoldOutlined, MenuUnfoldOutlined} from "@ant-design/icons";
 
 /** Compact column; main content offset uses --app-sider-width in App.tsx */
 const WIDTH_EXPANDED = 152;
@@ -73,6 +73,7 @@ export const SideNav = ({ meta }: { meta?: Record<string, unknown> }) => {
         {collapsed ? <MenuUnfoldOutlined style={{fontSize: 18, color: "#434343", lineHeight: 1}}/> : <MenuFoldOutlined style={{fontSize: 18, color: "#434343", lineHeight: 1}} />}
       </button>
       <Menu
+        mode="inline"
         inlineCollapsed={collapsed}
         inlineIndent={collapsed ? 12 : 14}
         items={cleanedMenuItems}

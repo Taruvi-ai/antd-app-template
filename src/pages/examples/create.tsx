@@ -3,24 +3,26 @@ import { Form, Input, Select } from "antd";
 import {
   EXAMPLE_STATUS_VALUES,
   exampleItemFormSchema,
-  type ExampleItemFormInput,
   type ExampleItemFormValues,
 } from "./formSchema";
 import { applyZodErrorsToAntdForm } from "./zodFormErrors";
 
+// NOTE: use the form instance Refine creates (`formProps.form`). Do NOT call
+// `Form.useForm()` yourself and pass `form={form}` after spreading `formProps` —
+// that replaces Refine's instance and triggers "useForm is not connected to any
+// Form element".
 export default function ExampleCreate() {
   const { formProps, saveButtonProps } = useForm<ExampleItemFormValues>({
     resource: "example_items",
     action: "create",
     redirect: "list",
   });
-  const [form] = Form.useForm<ExampleItemFormInput>();
 
-  const handleFinish = async (values: ExampleItemFormInput) => {
+  const handleFinish = async (values: unknown) => {
     const parsed = exampleItemFormSchema.safeParse(values);
 
     if (!parsed.success) {
-      applyZodErrorsToAntdForm(form, parsed.error);
+      if (formProps.form) applyZodErrorsToAntdForm(formProps.form, parsed.error);
       return;
     }
 
@@ -29,7 +31,7 @@ export default function ExampleCreate() {
 
   return (
     <Create title="Create Example Item" saveButtonProps={saveButtonProps}>
-      <Form {...formProps} form={form} layout="vertical" onFinish={handleFinish}>
+      <Form {...formProps} layout="vertical" onFinish={handleFinish}>
         <Form.Item label="Name" name="name">
           <Input placeholder="Enter name" />
         </Form.Item>

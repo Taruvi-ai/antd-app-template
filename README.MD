@@ -1,47 +1,48 @@
-# refine-template-new
+# Taruvi Refine Template (Ant Design)
 
-<div align="center" style="margin: 30px;">
-    <a href="https://refine.dev">
-    <img alt="refine logo" src="https://refine.ams3.cdn.digitaloceanspaces.com/readme/refine-readme-banner.png">
-    </a>
-</div>
-<br/>
+A [Refine](https://refine.dev) v5 + [Ant Design](https://ant.design) starter wired to the [Taruvi](https://taruvi.ai) backend (data, auth, storage, app, user providers).
 
-This [Refine](https://github.com/refinedev/refine) project was generated with [create refine-app](https://github.com/refinedev/refine/tree/master/packages/create-refine-app).
-
-## Getting Started
-
-A React Framework for building internal tools, admin panels, dashboards & B2B apps with unmatched flexibility ✨
-
-Refine's hooks and components simplifies the development process and eliminates the repetitive tasks by providing industry-standard solutions for crucial aspects of a project, including authentication, access control, routing, networking, state management, and i18n.
-
-## Available Scripts
-
-### Running the development server.
+## Getting started
 
 ```bash
-    npm run dev
+npm install          # also fetches the Taruvi agent skills (postinstall)
+npm run setup        # interactive: writes .env (and MCP config) from .env.example
+npm run dev
 ```
 
-### Building for production.
+`.env` needs `TARUVI_SITE_URL`, `TARUVI_APP_SLUG` and `TARUVI_API_KEY` (see `.env.example`). The app throws at startup if one is missing.
 
-```bash
-    npm run build
+## Scripts
+
+| Script | What it does |
+|---|---|
+| `npm run dev` | Start the dev server (browser errors are logged to `logs/frontend.ndjson`) |
+| `npm run build` | Type-check and build for production |
+| `npm run setup` | Generate `.env` from `.env.example` |
+| `npm run deploy` | Build, zip `dist/`, and upload to the Taruvi frontend workers API |
+
+## Project layout
+
+```
+src/
+  App.tsx                 Refine setup, routes, resources
+  providers/              Taruvi providers (data, auth, storage, app, user, access control)
+  components/             CustomSider, ErrorBoundary, UnsavedChangesDialog, ListPageShell, ConsoleLogDrawer
+  contexts/               color-mode (antd ConfigProvider theme), app-settings
+  theme/themeOptions.ts   Design tokens — brand the app here
+  pages/examples/         Copy-from CRUD examples (list/create/edit, Zod forms, access control)
+  pages/{home,login,...}  App pages
+  utils/                  storage/function helpers, client error logger
 ```
 
-### Running the production server.
+## For AI agents
 
-```bash
-    npm run start
-```
+`AGENTS.md` (all agents) and `CLAUDE.md` (Claude Code subagent flow) define the working rules: functional-app default, plan in `docs/spec.md`, Taruvi skill preflight, Zod forms, antd usage. References: `docs/antd-reference.md`, `docs/zod-reference.md`.
 
-## Learn More
+## Learn more
 
-To learn more about **Refine**, please check out the [Documentation](https://refine.dev/docs)
-
-- **REST Data Provider** [Docs](https://refine.dev/docs/core/providers/data-provider/#overview)
-- **Ant Design** [Docs](https://refine.dev/docs/ui-frameworks/antd/tutorial/)
-- **React Router** [Docs](https://refine.dev/docs/core/providers/router-provider/)
+- [Refine docs](https://refine.dev/docs) · [Refine + antd](https://refine.dev/docs/ui-frameworks/antd/tutorial/)
+- [Ant Design](https://ant.design/components/overview)
 
 ## License
 
