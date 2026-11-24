@@ -1,37 +1,94 @@
+/* Taruvi design-system "cover" — ported from the upstream MUI starter. */
 .home-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-height: calc(100vh - var(--nav-height, 60px));
-  background-size: 400% 400%;
-  animation: home-gradient-shift 15s ease infinite;
+  padding: 48px 32px;
   overflow: hidden;
 }
 
 .home-hero--light {
-  background-image: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #667eea);
+  background: linear-gradient(135deg, #dce9f5 0%, #5ab4f0 60%, #2b97ff 100%);
 }
 
 .home-hero--dark {
-  background-image: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #1a1a2e);
+  background: linear-gradient(135deg, #002a3c 0%, #004369 55%, #056a8f 100%);
 }
 
-.home-hero__content {
-  text-align: center;
-  animation: home-fade-in 1s ease-out;
+.home-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.18) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.home-hero__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 32px;
+  width: 100%;
+  max-width: 1200px;
+  animation: home-fade-in 0.8s ease-out;
 }
 
 .home-hero__title.ant-typography {
-  margin: 0 0 8px;
-  font-size: clamp(3rem, 8vw, 6rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  margin: 0 0 16px;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 300;
+  font-size: clamp(2.5rem, 5vw, 3.625rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
   color: #fff;
 }
 
 .home-hero__subtitle.ant-typography {
   margin: 0;
-  font-size: clamp(1rem, 2vw, 1.5rem);
-  font-weight: 300;
-  letter-spacing: 0.05em;
-  color: rgba(255, 255, 255, 0.92);
+  max-width: 420px;
+  font-family: "Open Sans", sans-serif;
+  font-size: clamp(0.9375rem, 1.5vw, 1.0625rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.home-hero__glyphs {
+  display: none;
+  align-items: flex-end;
+  gap: 12px;
+  opacity: 0.85;
+  font-family: "Quicksand", sans-serif;
+  line-height: 1;
+}
+
+.home-hero__glyph-upper,
+.home-hero__glyph-lower {
+  line-height: 1;
+  -webkit-text-stroke: 2px rgba(255, 255, 255, 0.85);
+  -webkit-text-fill-color: transparent;
+}
+
+.home-hero__glyph-upper {
+  padding: 0 8px;
+  font-weight: 200;
+  font-size: 180px;
+  border: 3px solid rgba(255, 255, 255, 0.6);
+}
+
+.home-hero__glyph-lower {
+  font-weight: 700;
+  font-size: 140px;
+}
+
+@media (min-width: 900px) {
+  .home-hero { padding: 80px 64px; }
+  .home-hero__inner { flex-direction: row; align-items: center; gap: 48px; }
+  .home-hero__glyphs { display: flex; }
 }
 
 @keyframes home-fade-in {
@@ -39,11 +96,6 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes home-gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .home-hero, .home-hero__content { animation: none; }
+  .home-hero__inner { animation: none; }
 }
