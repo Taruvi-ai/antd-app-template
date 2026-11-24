@@ -73,6 +73,7 @@ export const SideNav = ({ meta }: { meta?: Record<string, unknown> }) => {
         {collapsed ? <MenuUnfoldOutlined style={{fontSize: 18, color: "#434343", lineHeight: 1}}/> : <MenuFoldOutlined style={{fontSize: 18, color: "#434343", lineHeight: 1}} />}
       </button>
       <Menu
+        mode="inline"
         inlineCollapsed={collapsed}
         inlineIndent={collapsed ? 12 : 14}
         items={cleanedMenuItems}

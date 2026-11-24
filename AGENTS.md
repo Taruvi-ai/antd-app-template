@@ -120,6 +120,12 @@ degrade gracefully in the UI.
 - **Notifications:** use the existing `useNotificationProvider` from
   `@refinedev/antd` (configured in `src/App.tsx`, inside antd's `<App>`). No
   custom `message`/`notification` systems or ad hoc toasts.
+- **Refine + antd forms:** use the instance from `useForm` (`formProps.form`) —
+  never call `Form.useForm()` and pass `form={form}` after spreading `formProps`
+  (it replaces Refine's instance → "useForm is not connected to any Form element").
+  Copy `src/pages/examples/{create,edit}.tsx`.
+- **antd v5 on React 19:** `@ant-design/v5-patch-for-react-19` is imported first in
+  `src/index.tsx`; keep it. `Menu` with `inlineCollapsed` must set `mode="inline"`.
 - **Forms use Zod.** All new/changed forms (create, edit, filters, any user
   input) validate with a **Zod** schema wired to the antd `Form` — see
   `src/pages/examples/formSchema.ts` + `zodFormErrors.ts`. Use the Zod MCP server
