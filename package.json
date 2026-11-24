@@ -23,7 +23,7 @@
     "@refinedev/react-router": "^2.0.0",
     "@refinedev/rest": "^2.1.0",
     "@taruvi/navkit": "^0.0.51",
-    "@taruvi/refine-providers": "^1.3.0",
+    "@taruvi/refine-providers": "^1.3.7",
     "@taruvi/sdk": "^1.5.4",
     "@uiw/react-md-editor": "^4.0.8",
     "antd": "^5.23.0",

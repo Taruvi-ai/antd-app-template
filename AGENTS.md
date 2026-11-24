@@ -126,6 +126,11 @@ degrade gracefully in the UI.
   Copy `src/pages/examples/{create,edit}.tsx`.
 - **antd v5 on React 19:** `@ant-design/v5-patch-for-react-19` is imported first in
   `src/index.tsx`; keep it. `Menu` with `inlineCollapsed` must set `mode="inline"`.
+- **Access control** (optional, off by default): to enable, uncomment
+  `accessControlProvider` in `src/App.tsx`. `taruviAccessControlProvider` already maps
+  actions (list/show→read, edit→update) and prefixes bare resource names as
+  `datatable:<name>`; use `meta.entityType` or a prefixed name for `function:`/`query:`
+  resources. No custom wrapper is needed.
 - **Forms use Zod.** All new/changed forms (create, edit, filters, any user
   input) validate with a **Zod** schema wired to the antd `Form` — see
   `src/pages/examples/formSchema.ts` + `zodFormErrors.ts`. Use the Zod MCP server
